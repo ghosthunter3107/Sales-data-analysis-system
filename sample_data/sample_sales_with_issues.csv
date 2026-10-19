@@ -1,0 +1,13 @@
+Order_ID,Date,Product,Category,Quantity,Price,Total_Sales,Region
+ORD-2001,2025-01-10,Wireless Mouse,Electronics,4,25.00,100.00,North
+ORD-2002,2025-01-12,Ergonomic Chair,Furniture,2,150.00,,East
+ORD-2003,2025-01-15,Cotton T-Shirt,Clothing,5,20.00,500.00,West
+ORD-2004,invalid-date,Coffee Maker,Home Appliances,1,80.00,80.00,South
+ORD-2005,2025-01-22,Gaming Monitor,Electronics,-2,250.00,-500.00,North
+ORD-2006,2025-01-25,Mechanical Keyboard,Electronics,,90.00,90.00,East
+ORD-2007,2025-01-28,Standing Desk,Furniture,1,-50.00,-50.00,West
+ORD-2001,2025-01-10,Wireless Mouse,Electronics,4,25.00,100.00,North
+ORD-2008,2025-02-05,Blender Pro,Home Appliances,3,70.00,210.00,South
+ORD-2009,2025-02-10,Running Shoes,,2,85.00,170.00,North
+ORD-2010,2025-02-15,USB-C Hub,Electronics,5,30.00,150.00,East
+ORD-2011,2025-02-18,Noise Cancelling Headphones,Electronics,2,200.00,400.00,West

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Interactive Charts - Sales Data Analysis System{% endblock %}
+{% block page_title %}Sales Visualization & Trends{% endblock %}
+{% block page_subtitle %}Interactive analytical visualizations powered by Chart.js{% endblock %}
+
+{% block content %}
+
+<!-- Filters for Charts -->
+<div class="filter-bar">
+    <form method="GET" action="{{ url_for('main.charts') }}">
+        <div class="filter-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="start_date" class="form-control" 
+                       value="{{ current_filters.start_date }}" 
+                       min="{{ filter_opts.min_date }}" max="{{ filter_opts.max_date }}">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">End Date</label>
+                <input type="date" name="end_date" class="form-control" 
+                       value="{{ current_filters.end_date }}" 
+                       min="{{ filter_opts.min_date }}" max="{{ filter_opts.max_date }}">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select">
+                    <option value="All" {% if current_filters.category == 'All' %}selected{% endif %}>All Categories</option>
+                    {% for cat in filter_opts.categories %}
+                        <option value="{{ cat }}" {% if current_filters.category == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" class="btn btn-primary" style="height: 38px;">Update Visuals</button>
+                <a href="{{ url_for('main.charts') }}" class="btn btn-secondary" style="height: 38px;">Reset</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Charts Grid -->
+<div class="charts-grid">
+    <!-- 1. Monthly Revenue -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title">📈 Monthly Revenue Trend</h3>
+                <p class="card-subtitle">Month-over-month total sales volume</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="monthlyRevenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Category-wise Revenue -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title">🍩 Category-Wise Revenue Share</h3>
+                <p class="card-subtitle">Contribution of each product department</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="categoryRevenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Top 5 Products by Sales -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title">🏆 Top 5 Products (Units & Revenue)</h3>
+                <p class="card-subtitle">Comparison between physical volume and monetary revenue</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="topProductsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Sales Trends Over Time -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title">⏱️ Chronological Sales Velocity</h3>
+                <p class="card-subtitle">Daily transaction totals across the timeline</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="salesTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Category Units Volume -->
+    <div class="card" style="grid-column: 1 / -1; margin-bottom: 0;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title">📦 Total Quantity Dispatched by Department</h3>
+                <p class="card-subtitle">Physical inventory volume movement</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="chart-container" style="height: 260px;">
+                <canvas id="categoryUnitsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize Chart.js with data passed from Flask
+    const chartPayload = {{ charts_data | tojson }};
+    document.addEventListener('DOMContentLoaded', () => {
+        initAllCharts(chartPayload);
+    });
+</script>
+{% endblock %}

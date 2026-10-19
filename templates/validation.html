@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Data Validation - Sales Data Analysis System{% endblock %}
+{% block page_title %}Data Quality & Validation Audit{% endblock %}
+{% block page_subtitle %}Automated detection of data discrepancies, anomalies, and cleaning report{% endblock %}
+
+{% block content %}
+
+<!-- Action Bar / Status -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h2 style="font-size: 1.15rem; font-weight: 700;">File: {{ filename }}</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+            Inspection status: 
+            {% if is_cleaned %}
+                <span class="badge badge-success">✓ Cleaned & Sanitized</span>
+            {% else %}
+                <span class="badge badge-warning">⚠ Raw Dataset - Ready for Cleaning</span>
+            {% endif %}
+        </p>
+    </div>
+
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        {% if not is_cleaned %}
+        <form action="{{ url_for('main.clean_data') }}" method="POST">
+            <button type="submit" class="btn btn-success">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                Sanitize & Clean Data Now
+            </button>
+        </form>
+        {% else %}
+        <a href="{{ url_for('main.download_cleaned') }}" class="btn btn-secondary">
+            📥 Export Cleaned CSV
+        </a>
+        <form action="{{ url_for('main.save_to_database') }}" method="POST">
+            <button type="submit" class="btn btn-outline-primary">
+                💾 Save to MySQL Database
+            </button>
+        </form>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
+            Proceed to Dashboard &rarr;
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Audit Metric Cards -->
+<div class="audit-metric-box">
+    <div class="audit-metric">
+        <div class="val" style="color: var(--text-main);">{{ audit.total_rows | comma }}</div>
+        <div class="lbl">Total Rows</div>
+    </div>
+    <div class="audit-metric">
+        <div class="val" style="color: {% if audit.summary.duplicates > 0 %}var(--danger){% else %}var(--success){% endif %};">
+            {{ audit.summary.duplicates }}
+        </div>
+        <div class="lbl">Duplicate Rows</div>
+    </div>
+    <div class="audit-metric">
+        <div class="val" style="color: {% if audit.summary.missing_cells > 0 %}var(--warning){% else %}var(--success){% endif %};">
+            {{ audit.summary.missing_cells }}
+        </div>
+        <div class="lbl">Missing Cells</div>
+    </div>
+    <div class="audit-metric">
+        <div class="val" style="color: {% if audit.summary.invalid_quantities > 0 %}var(--danger){% else %}var(--success){% endif %};">
+            {{ audit.summary.invalid_quantities }}
+        </div>
+        <div class="lbl">Bad Quantities</div>
+    </div>
+    <div class="audit-metric">
+        <div class="val" style="color: {% if audit.summary.invalid_prices > 0 %}var(--danger){% else %}var(--success){% endif %};">
+            {{ audit.summary.invalid_prices }}
+        </div>
+        <div class="lbl">Bad Prices</div>
+    </div>
+    <div class="audit-metric">
+        <div class="val" style="color: {% if audit.summary.invalid_dates > 0 %}var(--danger){% else %}var(--success){% endif %};">
+            {{ audit.summary.invalid_dates }}
+        </div>
+        <div class="lbl">Invalid Dates</div>
+    </div>
+    <div class="audit-metric">
+        <div class="val" style="color: {% if audit.summary.mismatched_sales > 0 %}var(--warning){% else %}var(--success){% endif %};">
+            {{ audit.summary.mismatched_sales }}
+        </div>
+        <div class="lbl">Sales Discrepancies</div>
+    </div>
+</div>
+
+<!-- Detailed Audit Report Findings -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+    <!-- Quality Audit Findings -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <h3 class="card-title">🔍 Data Quality Audit Findings</h3>
+        </div>
+        <div class="card-body">
+            {% if audit.issues %}
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem;">
+                    {% for issue in audit.issues %}
+                        <li style="padding: 0.6rem 0.85rem; background: #fff1f2; border-left: 3px solid var(--danger); border-radius: var(--radius-sm); font-size: 0.85rem; color: #991b1b;">
+                            <strong>•</strong> {{ issue }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 1rem; color: var(--success);">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✓</div>
+                    <h4>No Quality Issues Detected!</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                        All rows have valid dates, positive numbers, and correct calculated sales.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Cleaning & Sanitization Actions -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <h3 class="card-title">🧹 Cleaning Report & Policy Actions</h3>
+        </div>
+        <div class="card-body">
+            {% if is_cleaned and cleaning_report %}
+                <div style="background: var(--success-light); border: 1px solid #bbf7d0; border-radius: var(--radius-sm); padding: 0.85rem; margin-bottom: 1rem;">
+                    <div style="font-weight: 700; color: #166534; font-size: 0.9rem;">
+                        Sanitization Summary
+                    </div>
+                    <div style="font-size: 0.85rem; color: #14532d; margin-top: 0.25rem;">
+                        Started with <strong>{{ cleaning_report.initial_rows }}</strong> rows → Cleaned dataset has <strong>{{ cleaning_report.final_rows }}</strong> valid records.
+                    </div>
+                </div>
+
+                <ul class="action-list">
+                    {% for act in cleaning_report.actions %}
+                        <li>{{ act }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Clicking <strong>Sanitize & Clean Data Now</strong> will execute our automated cleaning engine:
+                </p>
+                <ul style="font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem;">
+                    <li>Remove duplicate rows and duplicate Order IDs.</li>
+                    <li>Drop rows with invalid dates, negative quantities, or negative prices.</li>
+                    <li>Recalculate or fill `Total_Sales = Quantity × Price`.</li>
+                    <li>Default missing Category or Region to 'General'.</li>
+                    <li>Strip extraneous whitespace from all text columns.</li>
+                </ul>
+                <div style="margin-top: 1.5rem;">
+                    <form action="{{ url_for('main.clean_data') }}" method="POST">
+                        <button type="submit" class="btn btn-success" style="width: 100%;">
+                            Clean & Sanitize Data Now
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Data Table Preview -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            📄 Dataset Sample (Showing first {{ preview_rows|length }} rows of {{ total_rows }} records)
+        </h3>
+        <div>
+            <input type="text" id="clientTableSearch" placeholder="Filter preview rows..." class="form-control" style="width: 220px; padding: 0.4rem 0.75rem; font-size: 0.8rem;">
+        </div>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        <div class="table-responsive">
+            <table class="data-table searchable-table">
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                            <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in preview_rows %}
+                        <tr>
+                            {% for col in columns %}
+                                <td>
+                                    {% if col == 'Total_Sales' %}
+                                        {{ row[col] | currency }}
+                                    {% elif col == 'Price' %}
+                                        {{ row[col] | currency }}
+                                    {% else %}
+                                        {{ row[col] }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

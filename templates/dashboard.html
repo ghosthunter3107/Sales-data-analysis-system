@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sales Data Analysis System{% endblock %}
+{% block page_title %}Sales Analysis Dashboard{% endblock %}
+{% block page_subtitle %}Comprehensive Sales Performance Metrics, KPIs and Breakdown Reports{% endblock %}
+
+{% block content %}
+
+<!-- Filter Toolbar -->
+<div class="filter-bar">
+    <form method="GET" action="{{ url_for('main.dashboard') }}">
+        <div class="filter-grid">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="start_date" class="form-control" 
+                       value="{{ current_filters.start_date }}" 
+                       min="{{ filter_opts.min_date }}" max="{{ filter_opts.max_date }}">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">End Date</label>
+                <input type="date" name="end_date" class="form-control" 
+                       value="{{ current_filters.end_date }}" 
+                       min="{{ filter_opts.min_date }}" max="{{ filter_opts.max_date }}">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select">
+                    <option value="All" {% if current_filters.category == 'All' %}selected{% endif %}>All Categories</option>
+                    {% for cat in filter_opts.categories %}
+                        <option value="{{ cat }}" {% if current_filters.category == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Product</label>
+                <select name="product" class="form-select">
+                    <option value="All" {% if current_filters.product == 'All' %}selected{% endif %}>All Products</option>
+                    {% for prod in filter_opts.products %}
+                        <option value="{{ prod }}" {% if current_filters.product == prod %}selected{% endif %}>{{ prod }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" class="btn btn-primary" style="height: 38px;">Apply Filters</button>
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary" style="height: 38px;" title="Reset filters">Reset</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Active Filter Status -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+    <div style="font-size: 0.85rem; color: var(--text-muted);">
+        Showing analytics for <strong>{{ filtered_rows }}</strong> of <strong>{{ total_rows }}</strong> total records.
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+        <a href="{{ url_for('main.charts') }}" class="btn btn-outline-primary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+            Open Chart Visuals
+        </a>
+        <a href="{{ url_for('main.download_cleaned') }}" class="btn btn-secondary btn-sm">
+            📥 Export CSV
+        </a>
+    </div>
+</div>
+
+<!-- 6 Core KPI Cards -->
+<div class="kpi-grid">
+    <!-- 1. Total Revenue -->
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Total Revenue</span>
+            <div class="kpi-icon blue">💰</div>
+        </div>
+        <div class="kpi-value">{{ kpis.total_revenue | currency }}</div>
+        <div class="kpi-subtext">Sum of valid sales amounts</div>
+    </div>
+
+    <!-- 2. Total Orders -->
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Total Orders</span>
+            <div class="kpi-icon purple">📦</div>
+        </div>
+        <div class="kpi-value">{{ kpis.total_orders | comma }}</div>
+        <div class="kpi-subtext">Unique completed orders</div>
+    </div>
+
+    <!-- 3. Total Units Sold -->
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Total Units Sold</span>
+            <div class="kpi-icon green">📈</div>
+        </div>
+        <div class="kpi-value">{{ kpis.total_units_sold | comma }}</div>
+        <div class="kpi-subtext">Total item volume dispatched</div>
+    </div>
+
+    <!-- 4. Average Order Value -->
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Average Order Value</span>
+            <div class="kpi-icon amber">🏷️</div>
+        </div>
+        <div class="kpi-value">{{ kpis.average_order_value | currency }}</div>
+        <div class="kpi-subtext">Revenue &divide; Total orders</div>
+    </div>
+
+    <!-- 5. Best-Selling Product -->
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Best-Selling Product</span>
+            <div class="kpi-icon rose">🏆</div>
+        </div>
+        <div class="kpi-value" style="font-size: 1.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ kpis.best_selling_product.name }}">
+            {{ kpis.best_selling_product.name }}
+        </div>
+        <div class="kpi-subtext">
+            <strong>{{ kpis.best_selling_product.units | comma }}</strong> units sold ({{ kpis.best_selling_product.revenue | currency }})
+        </div>
+    </div>
+
+    <!-- 6. Highest-Revenue Month -->
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Highest-Revenue Month</span>
+            <div class="kpi-icon cyan">📅</div>
+        </div>
+        <div class="kpi-value" style="font-size: 1.25rem;">
+            {{ kpis.highest_revenue_month.month }}
+        </div>
+        <div class="kpi-subtext">
+            Total of <strong>{{ kpis.highest_revenue_month.revenue | currency }}</strong> generated
+        </div>
+    </div>
+</div>
+
+<!-- Breakdown Tables -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+    <!-- Category Performance Table -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <h3 class="card-title">📂 Category Performance</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Units Sold</th>
+                            <th>Revenue</th>
+                            <th>Share</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if breakdown.categories %}
+                            {% for cat in breakdown.categories %}
+                                <tr>
+                                    <td><strong>{{ cat.category }}</strong></td>
+                                    <td>{{ cat.units | comma }}</td>
+                                    <td>{{ cat.revenue | currency }}</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <span>{{ cat.share_percentage }}%</span>
+                                            <div style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 9999px; overflow: hidden; max-width: 60px;">
+                                                <div style="height: 100%; width: {{ cat.share_percentage }}%; background: var(--primary);"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No records match criteria</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Products Table -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <h3 class="card-title">⭐ Top 10 Revenue Generating Products</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Units</th>
+                            <th>Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if breakdown.top_selling %}
+                            {% for item in breakdown.top_selling %}
+                                <tr>
+                                    <td><strong>{{ item.product }}</strong></td>
+                                    <td><span class="badge badge-neutral">{{ item.category }}</span></td>
+                                    <td>{{ item.units | comma }}</td>
+                                    <td>{{ item.revenue | currency }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No records match criteria</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

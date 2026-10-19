@@ -1,0 +1,61 @@
+Order_ID,Date,Product,Category,Quantity,Price,Total_Sales,Region
+ORD-1001,2025-01-05,Wireless Mouse,Electronics,5,25.50,127.50,North
+ORD-1002,2025-01-08,Ergonomic Chair,Furniture,2,180.00,360.00,East
+ORD-1003,2025-01-12,Mechanical Keyboard,Electronics,3,89.99,269.97,West
+ORD-1004,2025-01-15,Cotton T-Shirt,Clothing,10,15.00,150.00,South
+ORD-1005,2025-01-18,Coffee Maker,Home Appliances,1,75.50,75.50,North
+ORD-1006,2025-01-22,Desk Organizer,Office Supplies,4,22.00,88.00,East
+ORD-1007,2025-01-25,Gaming Monitor,Electronics,2,249.99,499.98,South
+ORD-1008,2025-01-29,Denim Jacket,Clothing,3,65.00,195.00,West
+ORD-1009,2025-02-02,Air Fryer,Home Appliances,2,110.00,220.00,North
+ORD-1010,2025-02-05,USB-C Hub,Electronics,6,35.00,210.00,East
+ORD-1011,2025-02-09,Standing Desk,Furniture,1,320.00,320.00,West
+ORD-1012,2025-02-12,Ballpoint Pens Pack,Office Supplies,15,6.50,97.50,South
+ORD-1013,2025-02-16,Running Shoes,Clothing,4,85.00,340.00,North
+ORD-1014,2025-02-20,Blender Pro,Home Appliances,2,95.00,190.00,East
+ORD-1015,2025-02-24,Wireless Mouse,Electronics,8,25.50,204.00,West
+ORD-1016,2025-02-27,Notebook Spiral,Office Supplies,12,4.50,54.00,South
+ORD-1017,2025-03-02,Noise Cancelling Headphones,Electronics,3,199.99,599.97,North
+ORD-1018,2025-03-06,Bookshelf,Furniture,2,145.00,290.00,East
+ORD-1019,2025-03-10,Formal Shirt,Clothing,5,40.00,200.00,West
+ORD-1020,2025-03-14,Microwave Oven,Home Appliances,1,160.00,160.00,South
+ORD-1021,2025-03-18,Webcam HD,Electronics,4,49.99,199.96,North
+ORD-1022,2025-03-22,Paper Shredder,Office Supplies,1,85.00,85.00,East
+ORD-1023,2025-03-26,Gaming Monitor,Electronics,3,249.99,749.97,West
+ORD-1024,2025-03-29,Leather Wallet,Clothing,6,28.00,168.00,South
+ORD-1025,2025-04-03,Air Purifier,Home Appliances,2,130.00,260.00,North
+ORD-1026,2025-04-07,Ergonomic Chair,Furniture,3,180.00,540.00,East
+ORD-1027,2025-04-11,Mechanical Keyboard,Electronics,5,89.99,449.95,West
+ORD-1028,2025-04-15,Cotton T-Shirt,Clothing,14,15.00,210.00,South
+ORD-1029,2025-04-19,Wireless Mouse,Electronics,10,25.50,255.00,North
+ORD-1030,2025-04-23,Desk Lamp,Office Supplies,5,32.00,160.00,East
+ORD-1031,2025-04-27,Coffee Maker,Home Appliances,3,75.50,226.50,West
+ORD-1032,2025-05-02,Denim Jacket,Clothing,4,65.00,260.00,South
+ORD-1033,2025-05-06,Bluetooth Speaker,Electronics,7,45.00,315.00,North
+ORD-1034,2025-05-10,Standing Desk,Furniture,2,320.00,640.00,East
+ORD-1035,2025-05-14,Toaster 4-Slice,Home Appliances,3,42.00,126.00,West
+ORD-1036,2025-05-18,Stapler Heavy Duty,Office Supplies,8,12.50,100.00,South
+ORD-1037,2025-05-22,Gaming Monitor,Electronics,4,249.99,999.96,North
+ORD-1038,2025-05-26,Running Shoes,Clothing,5,85.00,425.00,East
+ORD-1039,2025-05-30,Air Fryer,Home Appliances,3,110.00,330.00,West
+ORD-1040,2025-06-03,Wireless Mouse,Electronics,12,25.50,306.00,South
+ORD-1041,2025-06-07,Ergonomic Chair,Furniture,2,180.00,360.00,North
+ORD-1042,2025-06-11,Noise Cancelling Headphones,Electronics,4,199.99,799.96,East
+ORD-1043,2025-06-15,Formal Shirt,Clothing,8,40.00,320.00,West
+ORD-1044,2025-06-19,Microwave Oven,Home Appliances,2,160.00,320.00,South
+ORD-1045,2025-06-23,Desk Organizer,Office Supplies,6,22.00,132.00,North
+ORD-1046,2025-06-27,USB-C Hub,Electronics,9,35.00,315.00,East
+ORD-1047,2025-07-02,Mechanical Keyboard,Electronics,6,89.99,539.94,West
+ORD-1048,2025-07-06,Bookshelf,Furniture,3,145.00,435.00,South
+ORD-1049,2025-07-10,Leather Wallet,Clothing,7,28.00,196.00,North
+ORD-1050,2025-07-14,Air Purifier,Home Appliances,3,130.00,390.00,East
+ORD-1051,2025-07-18,Bluetooth Speaker,Electronics,8,45.00,360.00,West
+ORD-1052,2025-07-22,Ballpoint Pens Pack,Office Supplies,20,6.50,130.00,South
+ORD-1053,2025-07-26,Gaming Monitor,Electronics,5,249.99,1249.95,North
+ORD-1054,2025-07-30,Denim Jacket,Clothing,5,65.00,325.00,East
+ORD-1055,2025-08-04,Coffee Maker,Home Appliances,4,75.50,302.00,West
+ORD-1056,2025-08-08,Standing Desk,Furniture,3,320.00,960.00,South
+ORD-1057,2025-08-12,Cotton T-Shirt,Clothing,15,15.00,225.00,North
+ORD-1058,2025-08-16,Wireless Mouse,Electronics,11,25.50,280.50,East
+ORD-1059,2025-08-20,Notebook Spiral,Office Supplies,18,4.50,81.00,West
+ORD-1060,2025-08-24,Blender Pro,Home Appliances,4,95.00,380.00,South
