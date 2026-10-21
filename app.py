@@ -3,7 +3,6 @@ from flask import Flask, render_template
 from config import Config
 from routes.main_routes import main_bp
 from routes.api_routes import api_bp
-from core.database import test_connection, init_db
 
 def create_app():
     app = Flask(__name__)
@@ -49,18 +48,6 @@ if __name__ == '__main__':
     print("   SALES DATA ANALYSIS SYSTEM - COLLEGE PROJECT")
     print("=" * 65)
     print(f" * Server running on: http://127.0.0.1:{Config.PORT}")
-    print(" * Checking MySQL Database Connection...")
-    
-    db_ok, db_msg = test_connection()
-    if db_ok:
-        print(f" [✓] MySQL Connected: {db_msg}")
-        init_ok, init_msg = init_db()
-        if init_ok:
-            print(f" [✓] Tables verified: {init_msg}")
-    else:
-        print(f" [!] MySQL Notice: {db_msg}")
-        print("     The app will run in full preview mode.")
-        print("     To connect MySQL, update DB_PASSWORD in .env and restart.")
-    
+    print(" * Ready for CSV Uploads & Sales Analytics")
     print("=" * 65)
     app.run(host='0.0.0.0', port=Config.PORT, debug=Config.DEBUG)

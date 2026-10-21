@@ -17,13 +17,6 @@ class Config:
     UPLOAD_FOLDER = BASE_DIR / "uploads"
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max upload
     ALLOWED_EXTENSIONS = {"csv"}
-    
-    # MySQL Database Configuration
-    DB_HOST = os.getenv("DB_HOST", "localhost")
-    DB_PORT = int(os.getenv("DB_PORT", 3306))
-    DB_USER = os.getenv("DB_USER", "root")
-    DB_PASSWORD = os.getenv("DB_PASSWORD", "")
-    DB_NAME = os.getenv("DB_NAME", "sales_analysis")
 
 # Ensure upload directory exists
 os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)

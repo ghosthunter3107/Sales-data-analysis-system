@@ -9,11 +9,11 @@
 <!-- Hero Banner -->
 <section class="hero-section">
     <div class="hero-content">
-        <span class="hero-badge">Academic Project • Python, Flask & MySQL</span>
+        <span class="hero-badge">Academic Project • Python, Flask & Pandas</span>
         <h1 class="hero-title">Empowering Sales Insights with Automated Data Intelligence</h1>
         <p class="hero-desc">
             An end-to-end sales analytics system designed to ingest, validate, sanitize, and visualize retail sales data. 
-            Automates KPI metrics, generates dynamic Chart.js dashboards, and persists records securely in MySQL.
+            Automates KPI metrics, generates dynamic Chart.js dashboards, and enables instant CSV data cleaning and reporting.
         </p>
         <div class="hero-actions">
             <a href="{{ url_for('main.upload') }}" class="btn btn-primary btn-lg">
@@ -31,32 +31,24 @@
 </section>
 
 <!-- System Status Indicator Card -->
-<div class="card" style="border-left: 4px solid {% if db_connected %}var(--success){% else %}var(--warning){% endif %};">
+<div class="card" style="border-left: 4px solid var(--success);">
     <div class="card-body" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
         <div style="display: flex; align-items: center; gap: 1rem;">
-            <div style="width: 44px; height: 44px; border-radius: 50%; background: {% if db_connected %}var(--success-light){% else %}var(--warning-light){% endif %}; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
-                {% if db_connected %}💾{% else %}⚙️{% endif %}
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--success-light); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                ⚡
             </div>
             <div>
                 <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem;">
-                    MySQL Database Status: 
-                    {% if db_connected %}
-                        <span style="color: var(--success);">Connected & Ready</span>
-                    {% else %}
-                        <span style="color: var(--warning);">Needs Configuration</span>
-                    {% endif %}
+                    Analytics Engine: <span style="color: var(--success);">Active & Ready</span>
                 </h4>
                 <p style="font-size: 0.85rem; color: var(--text-muted);">
-                    {{ db_status_msg }}
-                    {% if not db_connected %}
-                        • You can still upload CSVs and view full analytics in session preview mode!
-                    {% endif %}
+                    In-memory data processing and automated validation are active. Upload a CSV file or load a demo dataset to explore insights.
                 </p>
             </div>
         </div>
         <div>
-            <a href="{{ url_for('main.database_view') }}" class="btn btn-secondary btn-sm">
-                View Database Settings &rarr;
+            <a href="{{ url_for('main.upload') }}" class="btn btn-primary btn-sm">
+                Get Started &rarr;
             </a>
         </div>
     </div>
@@ -166,10 +158,10 @@
     </div>
 
     <div class="feature-card">
-        <div class="feature-icon" style="background: var(--info-light); color: var(--info);">🗄️</div>
-        <h4 class="feature-title">6. MySQL Persistent Storage</h4>
+        <div class="feature-icon" style="background: var(--info-light); color: var(--info);">📥</div>
+        <h4 class="feature-title">6. Sanitized Data Export</h4>
         <p class="feature-desc">
-            Persists sanitized records to normalized relational tables (`sales`, `products`) with parameterized queries, duplicate prevention, and search.
+            Export sanitized, clean datasets as standard CSV files anytime for reporting, spreadsheets, Excel, or presentation slides.
         </p>
     </div>
 </div>

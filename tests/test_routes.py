@@ -52,18 +52,18 @@ def test_charts_route_with_data(client):
     assert response.status_code == 200
     assert b"monthlyRevenueChart" in response.data
 
-def test_database_page(client):
-    """Test database management page renders gracefully."""
-    response = client.get('/database')
+def test_database_page_redirect(client):
+    """Test legacy database page redirects gracefully to dashboard."""
+    response = client.get('/database', follow_redirects=True)
     assert response.status_code == 200
-    assert b"MySQL Database" in response.data
+    assert b"Dashboard" in response.data
 
 def test_api_status(client):
     """Test /api/status endpoint returns valid JSON."""
     response = client.get('/api/status')
     assert response.status_code == 200
     data = response.get_json()
-    assert 'database' in data
+    assert 'status' in data
     assert 'dataset' in data
 
 def test_api_charts_data(client):

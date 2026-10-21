@@ -22,23 +22,12 @@ from core.analyzer import (
     filter_dataframe,
     get_filter_options
 )
-from core.database import (
-    test_connection,
-    init_db,
-    save_sales_records,
-    get_all_sales,
-    get_database_stats,
-    get_categories_list
-)
 
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
     """Home landing page."""
-    # Check MySQL connection status
-    db_connected, db_status_msg = test_connection()
-    
     # Check if data is currently loaded in memory
     active_data = data_store.get_active_dataset()
     has_data = data_store.has_active_data()
@@ -48,20 +37,12 @@ def index():
     preview_kpis = None
     if has_data and working_df is not None:
         preview_kpis = calculate_kpis(working_df)
-    
-    # Database stats if connected
-    db_stats = None
-    if db_connected:
-        db_stats, _ = get_database_stats()
 
     return render_template(
         'index.html',
-        db_connected=db_connected,
-        db_status_msg=db_status_msg,
         has_data=has_data,
         filename=active_data.get('filename'),
         preview_kpis=preview_kpis,
-        db_stats=db_stats,
         is_cleaned=(active_data.get('cleaned_df') is not None)
     )
 
@@ -260,9 +241,6 @@ def dashboard():
     # Breakdown tables
     breakdown = get_breakdown_tables(filtered_df)
 
-    # Check MySQL status
-    db_connected, _ = test_connection()
-
     return render_template(
         'dashboard.html',
         kpis=kpis,
@@ -275,8 +253,7 @@ def dashboard():
         },
         breakdown=breakdown,
         filtered_rows=len(filtered_df),
-        total_rows=len(working_df),
-        db_connected=db_connected
+        total_rows=len(working_df)
     )
 
 @main_bp.route('/charts')
@@ -319,88 +296,13 @@ def charts():
 
 @main_bp.route('/database')
 def database_view():
-    """MySQL Database Storage and record browser page."""
-    # Check MySQL status
-    db_connected, db_message = test_connection()
-
-    page = request.args.get('page', 1, type=int)
-    limit = 25
-    offset = (page - 1) * limit
-
-    search = request.args.get('search', '').strip()
-    category = request.args.get('category', 'All')
-
-    records = []
-    total_count = 0
-    error_msg = None
-    categories = []
-    stats = None
-
-    if db_connected:
-        # Initialize tables if needed
-        init_db()
-        records, total_count, error_msg = get_all_sales(
-            limit=limit, 
-            offset=offset, 
-            search=search, 
-            category=category
-        )
-        categories = get_categories_list()
-        stats, _ = get_database_stats()
-    else:
-        error_msg = db_message
-
-    total_pages = (total_count + limit - 1) // limit if total_count > 0 else 1
-
-    active_data = data_store.get_active_dataset()
-    has_clean_data = (active_data.get('cleaned_df') is not None and not active_data.get('cleaned_df').empty)
-
-    return render_template(
-        'database.html',
-        db_connected=db_connected,
-        db_message=db_message,
-        records=records,
-        total_count=total_count,
-        error_msg=error_msg,
-        categories=categories,
-        stats=stats,
-        page=page,
-        total_pages=total_pages,
-        search=search,
-        selected_category=category,
-        has_clean_data=has_clean_data,
-        clean_row_count=len(active_data['cleaned_df']) if has_clean_data else 0
-    )
+    """Redirect database visits to dashboard."""
+    return redirect(url_for('main.dashboard'))
 
 @main_bp.route('/database/save', methods=['POST'])
 def save_to_database():
-    """Save cleaned in-memory dataset to MySQL sales and products tables."""
-    active_data = data_store.get_active_dataset()
-    cleaned_df = active_data.get('cleaned_df')
-
-    # If user hasn't explicitly clicked clean, but raw data is available, clean it now
-    if cleaned_df is None or cleaned_df.empty:
-        raw_df = active_data.get('raw_df')
-        if raw_df is not None and not raw_df.empty:
-            cleaned_df, report = clean_and_sanitize_dataframe(raw_df)
-            data_store.set_cleaned_dataset(cleaned_df, report)
-        else:
-            flash('No dataset available to save. Please upload a CSV first.', 'warning')
-            return redirect(url_for('main.upload'))
-
-    # Save to database
-    result = save_sales_records(cleaned_df)
-
-    if result.get('error'):
-        flash(f"Database Save Error: {result['error']}", 'danger')
-    else:
-        flash(
-            f"Successfully stored {result['inserted']} new records in MySQL! "
-            f"({result['skipped']} duplicate records were skipped safely).", 
-            'success'
-        )
-
-    return redirect(url_for('main.database_view'))
+    """Redirect legacy database save to dashboard."""
+    return redirect(url_for('main.dashboard'))
 
 @main_bp.route('/download/cleaned')
 def download_cleaned():

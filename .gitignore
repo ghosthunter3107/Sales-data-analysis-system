@@ -1,0 +1,19 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Environment secrets
+.env
+
+# Pytest & Cache
+.pytest_cache/
+
+# Uploaded test files
+uploads/*
+!uploads/.gitkeep

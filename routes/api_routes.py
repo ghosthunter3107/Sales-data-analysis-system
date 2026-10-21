@@ -1,21 +1,16 @@
 from flask import Blueprint, jsonify, request
 from core import data_store
 from core.analyzer import calculate_kpis, get_charts_data, filter_dataframe, get_breakdown_tables
-from core.database import test_connection, get_database_stats
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
 @api_bp.route('/status')
 def status():
-    """Returns database status and active dataset state."""
-    db_ok, db_msg = test_connection()
+    """Returns system status and active dataset state."""
     active_data = data_store.get_active_dataset()
     
     return jsonify({
-        "database": {
-            "connected": db_ok,
-            "message": db_msg
-        },
+        "status": "online",
         "dataset": {
             "has_data": data_store.has_active_data(),
             "filename": active_data.get('filename'),

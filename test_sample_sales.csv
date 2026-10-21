@@ -1,0 +1,16 @@
+Order_ID,Date,Product,Category,Quantity,Price,Total_Sales,Region
+ORD-3001,2025-01-05,Wireless Mouse,Electronics,4,25.50,102.00,North
+ORD-3002,2025-01-08,Mechanical Keyboard,Electronics,2,89.99,179.98,West
+ORD-3003,2025-01-12,Ergonomic Chair,Furniture,1,180.00,180.00,East
+ORD-3004,2025-01-15,Cotton T-Shirt,Clothing,6,15.00,90.00,South
+ORD-3005,2025-01-18,Coffee Maker,Home Appliances,2,75.50,151.00,North
+ORD-3006,2025-01-22,Gaming Monitor,Electronics,1,249.99,249.99,South
+ORD-3007,2025-01-26,Denim Jacket,Clothing,3,65.00,195.00,West
+ORD-3008,2025-02-02,Air Fryer,Home Appliances,1,110.00,110.00,North
+ORD-3009,2025-02-05,USB-C Hub,Electronics,5,35.00,175.00,East
+ORD-3010,2025-02-10,Standing Desk,Furniture,1,320.00,320.00,West
+ORD-3011,2025-02-14,Running Shoes,Clothing,2,85.00,170.00,North
+ORD-3012,2025-02-20,Blender Pro,Home Appliances,2,95.00,190.00,East
+ORD-3013,2025-03-01,Noise Cancelling Headphones,Electronics,2,199.99,399.98,North
+ORD-3014,2025-03-05,Bookshelf,Furniture,1,145.00,145.00,East
+ORD-3015,2025-03-12,Smart Watch,Electronics,3,129.99,389.97,South
